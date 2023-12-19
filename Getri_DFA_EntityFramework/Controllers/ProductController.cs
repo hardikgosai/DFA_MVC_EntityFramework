@@ -36,5 +36,67 @@ namespace Getri_DFA_EntityFramework.Controllers
             }
             return View("~/Views/Product/CreateProduct.cshtml");
         }
+
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            Product product = productRepository.GetProductByID(id.Value);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View("~/Views/Product/EditProduct.cshtml", product);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditProduct(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                productRepository.UpdateProduct(product);
+                return RedirectToAction("GetAllProducts");
+            }
+            return View("~/Views/Product/EditProduct.cshtml", product);
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            Product product = productRepository.GetProductByID(id.Value);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View("~/Views/Product/DeleteProduct.cshtml", product);
+        }
+
+        public IActionResult ProductDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            Product product = productRepository.GetProductByID(id.Value);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View("~/Views/Product/ProductDetails.cshtml", product);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            productRepository.DeleteProduct(id);
+            return RedirectToAction("GetAllProducts");
+        }
     }
 }

@@ -42,13 +42,27 @@ namespace Getri_DFA_EntityFramework.Repository
         public Product InsertProduct(Product product)
         {
             dbContext.Products.Add(product);
+            dbContext.SaveChanges();
             return product;
         }
 
         public Product UpdateProduct(Product product)
         {
-            dbContext.Products.Update(product);
-            return product;
+            var productToUpdate = dbContext.Products.Find(product.Id);
+            if (productToUpdate == null)
+            {
+                return null;
+            }
+            else
+            {
+                productToUpdate.Name = product.Name;
+                productToUpdate.Description = product.Description;
+                productToUpdate.Price = product.Price;
+                productToUpdate.Quantity = product.Quantity;
+            }
+            dbContext.Products.Update(productToUpdate);
+            dbContext.SaveChanges();
+            return productToUpdate;
         }
     }
 }
